@@ -10,14 +10,6 @@
 #                  (default: ZDesmos/zdesmos)
 #   ZDMS_VERSION   release tag to install (default: latest)
 #   ZDMS_INSTALL_DIR  where to place the binary (default: $HOME/.local/bin)
-<<<<<<< HEAD
-#   ZDMS_BASE_URL  fetch "$ZDMS_BASE_URL/zdms-<arch>" instead of a GitHub
-#                  release -- for local testing, e.g. against
-#                  `python3 -m http.server` serving a directory that has
-#                  a file named zdms-x86_64 (or whatever your arch is):
-#                    ZDMS_BASE_URL=http://localhost:8080 ./install.sh
-=======
->>>>>>> ea9b338f92142d8d550400180e6c2b8d63a0e406
 
 set -eu
 
