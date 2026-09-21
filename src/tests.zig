@@ -8,10 +8,7 @@ test {
     _ = @import("core/arch.zig");
     _ = @import("core/cache.zig");
     _ = @import("core/config.zig");
-<<<<<<< HEAD
     _ = @import("core/doctor.zig");
-=======
->>>>>>> ea9b338f92142d8d550400180e6c2b8d63a0e406
     _ = @import("core/log.zig");
     _ = @import("core/install.zig");
     _ = @import("core/plan.zig");

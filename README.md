@@ -382,7 +382,6 @@ right `-Dcpu=` to those two lines, if you actually need both.
 Neither script has been run against a real compiler/network — same
 caveat as everything else in this project. `shellcheck` passes clean on
 both, which is as far as I could verify without executing them.
-<<<<<<< HEAD
 
 Phase 10 (1.0 Release) — implemented:
 
@@ -441,5 +440,3 @@ Known, deliberate gaps, not oversights:
   exact value needs a real `zig targets` to look up
 - repository authentication (private repos) isn't implemented — both
   configured repos are public, so this wasn't needed yet
-=======
->>>>>>> ea9b338f92142d8d550400180e6c2b8d63a0e406

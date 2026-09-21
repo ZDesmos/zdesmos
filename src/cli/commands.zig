@@ -17,10 +17,7 @@ const plan_mod = @import("../core/plan.zig");
 const resolver = @import("../resolver/resolver.zig");
 const cache_mod = @import("../core/cache.zig");
 const transaction_mod = @import("../core/transaction.zig");
-<<<<<<< HEAD
 const doctor_mod = @import("../core/doctor.zig");
-=======
->>>>>>> ea9b338f92142d8d550400180e6c2b8d63a0e406
 const package_mod = @import("../package/package.zig");
 const index_mod = @import("../repository/index.zig");
 const checksum_mod = @import("../package/checksum.zig");
@@ -146,14 +143,9 @@ pub fn dispatch(allocator: std.mem.Allocator, config: config_mod.Config, cmd: ar
             });
         },
         .doctor => {
-<<<<<<< HEAD
             const report = doctor_mod.run(allocator, config);
             log.info("{d} check(s), {d} problem(s)", .{ report.checks, report.problems });
             if (report.problems > 0) return error.DoctorFoundProblems;
-=======
-            log.err("'doctor' is not implemented yet (planned for Phase 10)", .{});
-            return error.NotImplemented;
->>>>>>> ea9b338f92142d8d550400180e6c2b8d63a0e406
         },
     }
 }
@@ -260,7 +252,6 @@ fn upgradeAll(allocator: std.mem.Allocator, config: config_mod.Config) !void {
     try installNames(allocator, config, names, names);
 }
 
-<<<<<<< HEAD
 test "doctor reports its check count through dispatch on a clean temp environment" {
     const allocator = std.testing.allocator;
     var tmp = std.testing.tmpDir(.{});
@@ -273,14 +264,6 @@ test "doctor reports its check count through dispatch on a clean temp environmen
     defer for (paths) |p| allocator.free(p);
 
     try dispatch(allocator, cfg, .doctor);
-=======
-test "stub commands still report NotImplemented" {
-    const cfg = config_mod.default();
-    const commands = [_]args.Command{.doctor};
-    for (commands) |cmd| {
-        try std.testing.expectError(error.NotImplemented, dispatch(std.testing.allocator, cfg, cmd));
-    }
->>>>>>> ea9b338f92142d8d550400180e6c2b8d63a0e406
 }
 
 fn tmpConfig(allocator: std.mem.Allocator, tmp_path: []const u8, out: *[3][]u8) !config_mod.Config {

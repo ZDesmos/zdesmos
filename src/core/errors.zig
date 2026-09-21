@@ -62,13 +62,10 @@ pub const TransactionError = error{
     TransactionInProgress,
 };
 
-<<<<<<< HEAD
 /// Non-zero exit signal from `zdms doctor` when it finds (but doesn't
 /// fix) a problem -- lets scripts treat doctor like `fsck`.
 pub const DoctorError = error{DoctorFoundProblems};
 
-=======
->>>>>>> ea9b338f92142d8d550400180e6c2b8d63a0e406
 /// Placeholder for functionality slated for a later development phase.
 /// Distinguishes "not built yet" from an actual runtime failure.
 pub const NotImplemented = error{NotImplemented};
