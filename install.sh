@@ -1,6 +1,11 @@
 #!/bin/sh
 # Installs zdms by downloading the right prebuilt binary from a GitHub
-# release and dropping it in $HOME/.local/bin.
+# release and dropping it in /usr/local/bin -- a system-wide location, on
+# purpose: zdms needs root for almost everything it does (it writes to
+# install_root="/", /var/lib/zdms, /var/cache/zdms by default), so
+# installing it somewhere only $USER's PATH sees it means `sudo zdms`
+# fails with "command not found" the moment someone actually uses it,
+# since sudo's PATH does not include a regular user's ~/.local/bin.
 #
 # Usage:
 #   curl -fsSL https://raw.githubusercontent.com/ZDesmos/zdesmos/main/install.sh | sh
@@ -9,7 +14,7 @@
 #   ZDMS_REPO      GitHub "owner/repo" to fetch releases from
 #                  (default: ZDesmos/zdesmos)
 #   ZDMS_VERSION   release tag to install (default: latest)
-#   ZDMS_INSTALL_DIR  where to place the binary (default: $HOME/.local/bin)
+#   ZDMS_INSTALL_DIR  where to place the binary (default: /usr/local/bin)
 #   ZDMS_BASE_URL  fetch "$ZDMS_BASE_URL/zdms-<arch>" instead of a GitHub
 #                  release -- for local testing, e.g. against
 #                  `python3 -m http.server` serving a directory that has
@@ -20,7 +25,7 @@ set -eu
 
 repo="${ZDMS_REPO:-ZDesmos/zdesmos}"
 version="${ZDMS_VERSION:-latest}"
-install_dir="${ZDMS_INSTALL_DIR:-$HOME/.local/bin}"
+install_dir="${ZDMS_INSTALL_DIR:-/usr/local/bin}"
 base_url="${ZDMS_BASE_URL:-}"
 
 # --- detect architecture, matching src/core/arch.zig's Architecture enum ---
@@ -72,7 +77,6 @@ else
   url="https://github.com/$repo/releases/download/$version/zdms-$arch"
 fi
 
-mkdir -p "$install_dir"
 tmp_file="$(mktemp)"
 trap 'rm -f "$tmp_file"' EXIT
 
@@ -85,9 +89,22 @@ else
   echo "Need curl or wget to download zdms." >&2
   exit 1
 fi
-
 chmod +x "$tmp_file"
-mv "$tmp_file" "$install_dir/zdms"
+
+# Escalate with sudo only for the final move, only if actually needed --
+# running the whole script as root (e.g. inside a container) skips this.
+if [ -w "$install_dir" ] || { [ ! -e "$install_dir" ] && mkdir -p "$install_dir" 2>/dev/null; }; then
+  mv "$tmp_file" "$install_dir/zdms"
+elif command -v sudo >/dev/null 2>&1; then
+  echo "$install_dir needs root to write to -- you may be prompted for your password."
+  sudo mkdir -p "$install_dir"
+  sudo mv "$tmp_file" "$install_dir/zdms"
+  sudo chmod 755 "$install_dir/zdms"
+else
+  echo "Cannot write to $install_dir and no sudo available." >&2
+  echo "Re-run with ZDMS_INSTALL_DIR set to a writable directory instead." >&2
+  exit 1
+fi
 trap - EXIT
 
 echo "Installed to $install_dir/zdms"
